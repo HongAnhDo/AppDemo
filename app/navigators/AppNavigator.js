@@ -7,7 +7,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import Login from '../screens/Login'
 import Home from '../screens/Home'
 import { useSelector } from 'react-redux';
-import { useWindowDimensions , Dimensions} from 'react-native';
+import { useWindowDimensions, Dimensions } from 'react-native';
 
 const { width } = Dimensions.get("screen");
 
@@ -26,7 +26,6 @@ function LoginStack() {
 function MainStackScreen() {
   const dimensions = useWindowDimensions();
 
-  const isLargeScreen = dimensions.width >= 768;
   return (
     <Drawer.Navigator
       style={{ flex: 1 }}
@@ -56,7 +55,7 @@ function MainStackScreen() {
           fontWeight: "normal"
         }
       }}
-      initialRouteName="Login"
+      initialRouteName="Home"
     >
       <Drawer.Screen name="Home" component={Home} />
       <Drawer.Screen name="Login" component={Login} />
@@ -69,10 +68,9 @@ const Route = () => {
   const accessToken = useSelector((state) =>
     state.loginReducer.accessToken
   );
-
   return (
     <NavigationContainer>
-      {(accessToken == null || accessToken == undefined) ?
+      {(accessToken == null || accessToken == undefined || accessToken == '') ?
 
         <LoginStack /> :
         <MainStackScreen />

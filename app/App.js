@@ -1,27 +1,29 @@
 import React, { Component, useEffect } from 'react';
 import { Provider } from 'react-redux';
-import redux from './configs/redux';
+import store from './redux/store';
 import Router from './navigators/AppNavigator'
-import AsyncStorage from '@react-native-community/async-storage'
+import AsyncStorage from '@react-native-community/async-storage';
+import { handleMe } from './requests'
 
 export default function App(props) {
 
   const bootstrapAsync = async () => {
-    // let userToken = { "access_token": "test" };
     let userToken;
     try {
-      // AsyncStorage.removeItem('accessToken');
       userToken = await AsyncStorage.getItem('accessToken');
-      if (userToken != undefined)
-        redux.store.dispatch({ type: 'RESTORE_TOKEN', payload: {"access_token": userToken} });
-
+      if (userToken != undefined && userToken != null && userToken != '') {
+        try {
+          console.log("handleMe");
+          await handleMe(userToken);
+          store.dispatch({ type: 'RESTORE_TOKEN', payload: { "accessToken": userToken } });
+        } catch (err) {
+          await AsyncStorage.removeItem('accessToken');
+        }
+      }
     } catch (e) {
-      //no message
     }
 
-    // console.log("Hong anh do");
-    // userToken = { "access_token": "test" };
-    console.log(userToken);
+
   };
 
 
@@ -31,7 +33,7 @@ export default function App(props) {
   });
 
   return (
-    <Provider store={redux.store}>
+    <Provider store={store}>
       <Router />
     </Provider>
   );

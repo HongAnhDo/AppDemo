@@ -13,9 +13,10 @@ const loginReducer = (state = initData, { type, payload }) => {
                 isLoading: true,
             };
         case 'LOGIN_SUCCESS':
+            console.log(payload.accessToken);
             return {
                 ...state,
-                accessToken: payload.access_token,
+                accessToken: payload.accessToken,
                 isLoading: false,
                 error: '',
             };
@@ -26,20 +27,17 @@ const loginReducer = (state = initData, { type, payload }) => {
                 error: 'Login fail',
             };
         case 'RESTORE_TOKEN':
-            console.log(type);
-            console.log(payload);
-            console.log("______________________")
             return {
                 ...state,
                 isLoading: false,
-                accessToken: payload.access_token
+                accessToken: payload.accessToken
 
             }
         case 'LOGOUT':
             return {
                 ...state,
                 isLoading: false,
-                accessToken: null
+                accessToken: ''
             }
         default:
             return state;

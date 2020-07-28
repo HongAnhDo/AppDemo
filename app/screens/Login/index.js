@@ -4,9 +4,10 @@ import { Keyboard, Text, View, TextInput, TouchableWithoutFeedback, Alert, Keybo
 import { Button } from 'react-native-elements';
 import Wallpaper from '../../components/Wallpaper';
 import { connect } from 'react-redux';
-import { actionLogin } from '../../redux/actions/loginAction';
+import { actionLogin, loginSuccess, loginFailure } from '../../redux/actions/loginAction';
 import Loader from '../../components/Loader';
-import { login as callLogin } from '../../requests'
+import { handleLogin } from '../../requests'
+import AsyncStorage from '@react-native-community/async-storage';
 
 class LoginScreen extends Component {
     constructor(props) {
@@ -20,32 +21,33 @@ class LoginScreen extends Component {
 
     async handleLoginAction(event) {
         Keyboard.dismiss();
-
+        this.props.actionLogin();
         console.log(`handleLoginAction: ${JSON.stringify(this.state)}`);
-        await callLogin(this.state.username, this.this.state.password);
-        this.props.actionLogin({
-            username: this.state.username,
-            password: this.state.password,
-        });
+        try {
+            let data = await handleLogin(this.state.username, this.state.password);
+
+            await AsyncStorage.setItem("accessToken", data.accessToken);
+            this.props.loginSuccess({ accessToken: data.accessToken });
+        } catch (err) {
+            this.props.loginFailure();
+        }
+
+
     }
 
     handleUsername(text, e) {
-        console.log(`text: ${text}`);
         this.setState({
             username: text,
         });
     }
 
     handlePassword(text, e) {
-        console.log(`text: ${text}`);
         this.setState({
             password: text,
         });
     }
 
     render() {
-        console.log(this.props.login.isLoading);
-
 
         return (
 
@@ -90,5 +92,5 @@ export default connect(
     state => ({
         login: state.loginReducer
     }),
-    { actionLogin }
+    { actionLogin, loginSuccess, loginFailure }
 )(LoginScreen)
