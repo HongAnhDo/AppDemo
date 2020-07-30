@@ -4,54 +4,107 @@ import {
     FlatList,
     TouchableOpacity,
     SafeAreaView,
-    StatusBar,
     Text,
     View
 } from 'react-native';
-import { Button } from 'react-native-elements'
 import { connect } from 'react-redux';
 import { logout } from '../../redux/actions/loginAction';
-import { handleLoadListArticles } from '../../requests'
+import { handleLoadListArticles } from '../../requests';
 import AsyncStorage from '@react-native-community/async-storage';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import Loader from '../../components/Loader';
+import styles from './StyleFormLogin';
+import { actionStopRefreshArticles } from '../../redux/actions/homeAction';
+
 class HomeScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            listArticles: []
+            listArticles: [],
+            isLoading: true
         }
     }
     async handleLoginAction(event) {
-        console.log("handleLoginAction ================");
         await AsyncStorage.removeItem("accessToken");
         this.props.logout();
-
     }
 
     async componentDidMount() {
-        console.log("========================= call lisst");
         try {
             let data = await handleLoadListArticles();
-            this.setState({ listArticles: data });
+            this.setState({ listArticles: data, isLoading: false });
         } catch (e) {
+            this.setState({ isLoading: false });
 
         }
+    }
 
+    static async getDerivedStateFromProps(nextProps, prevState) {
+        if (nextProps.isRefresh) {
+            var data = [];
+            try {
+                data = await handleLoadListArticles();
+            } catch (e) {
+                console.log("refresh error: " + e)
+            }
+
+            nextProps.actionStopRefreshArticles();
+            return {
+                listArticles: data,
+                isLoading: false
+            }
+
+        }
+        return null;
     }
 
 
+    _handleAddArticle() {
+        this.props.navigation.navigate("Đăng bài");
+    }
+
+    renderSeparator = () => {
+        return (
+            <View
+                style={{
+                    height: 1,
+                    width: "80%",
+                    backgroundColor: "#CED0CE",
+                    marginLeft: "10%"
+                }}
+            />
+        );
+    }
+
+
+    static navigationOptions = {
+        title: 'Details',
+    };
 
     render() {
         return (
             <SafeAreaView style={styles.container}>
+                <Loader loading={this.state.isLoading} />
                 <FlatList
                     data={this.state.listArticles}
                     renderItem={renderItem}
                     keyExtractor={(item) => item.id}
-                    maxToRenderPerBatch = {10}
-                    style ={{flex:1}}
-                // extraData={selectedId}
+                    maxToRenderPerBatch={10}
+                    style={{ flex: 1 }}
+                    extraData={this.state}
+                    ItemSeparatorComponent={this.renderSeparator}
                 />
-                <Button onPress={this.handleLoginAction.bind(this)} title="Test"> Test</Button>
+                <TouchableOpacity
+                    activeOpacity={0.7}
+                    onPress={this._handleAddArticle.bind(this)}
+                    style={styles.touchableOpacityStyle}>
+                    <Icon
+                        size={40}
+                        name="add"
+                        color="white"
+                        style={styles.floatingButtonStyle}
+                    />
+                </TouchableOpacity>
             </SafeAreaView>
         );
     }
@@ -61,36 +114,23 @@ const Item = ({ item, onPress, style }) => (
     <TouchableOpacity onPress={onPress} style={[styles.item, style]}>
         <View>
             <Text style={styles.title}>{item.title}</Text>
+            <Text style={styles.author}>{item.author + "   Created : " + item.createdTime}</Text>
             <Text>{item.content}</Text>
         </View>
     </TouchableOpacity>
 );
 
 const renderItem = ({ item }) => {
-
     return (
         <Item
             item={item}
-        // onPress={() => setSelectedId(item.id)}
-        // style={{ backgroundColor }}
         />
     );
 };
 
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        marginTop: StatusBar.currentHeight || 0,
-    },
-    item: {
-        padding: 20,
-        marginVertical: 8,
-        marginHorizontal: 16,
-    },
-    title: {
-        fontSize: 18,
-    },
-});
-export default connect(null, {
-    logout
+export default connect(state => ({
+    isRefresh: state.homeReducer.refreshArticles
+}), {
+    logout,
+    actionStopRefreshArticles
 })(HomeScreen);

@@ -1,13 +1,27 @@
 import React, { Component } from 'react';
-import styles from "./loginStyle";
-import { Keyboard, Text, View, TextInput, TouchableWithoutFeedback, Alert, KeyboardAvoidingView } from 'react-native';
+import {
+    Keyboard,
+    Text,
+    View,
+    TextInput,
+    Image,
+    TouchableOpacity,
+    TouchableWithoutFeedback,
+    KeyboardAvoidingView
+} from 'react-native';
+import {
+    actionLogin,
+    loginSuccess,
+    loginFailure
+} from '../../redux/actions/loginAction';
 import { Button } from 'react-native-elements';
 import Wallpaper from '../../components/Wallpaper';
 import { connect } from 'react-redux';
-import { actionLogin, loginSuccess, loginFailure } from '../../redux/actions/loginAction';
+import styles from "./loginStyle";
 import Loader from '../../components/Loader';
 import { handleLogin } from '../../requests'
 import AsyncStorage from '@react-native-community/async-storage';
+import { validatePassword, validateEmailOrUserName, validateUserName } from '../../utils/HandleUtils'
 
 class LoginScreen extends Component {
     constructor(props) {
@@ -16,67 +30,108 @@ class LoginScreen extends Component {
         this.state = {
             username: '',
             password: '',
+            userNameError: '',
+            passwordError: '',
+            isLoading: true,
+            init: true
         };
     }
 
-    async handleLoginAction(event) {
-        Keyboard.dismiss();
-        this.props.actionLogin();
-        console.log(`handleLoginAction: ${JSON.stringify(this.state)}`);
-        try {
-            let data = await handleLogin(this.state.username, this.state.password);
+    static getDerivedStateFromProps(nextProps, prevState) {
+        let params = nextProps.route.params;
+        if (params != null && params != undefined && prevState.username == '' && prevState.passwordError == ''
+            && prevState.init == true) {
+            return {
+                username: params.username,
+                password: params.password
+            }
+        }
+        return null;
+    }
 
+    async handleLoginAction(event) {
+
+        Keyboard.dismiss();
+
+        let { username, password, passwordError, userNameError } = this.state;
+
+        passwordError = validatePassword(password);
+        userNameError = validateEmailOrUserName(username);
+
+        if (passwordError != '' || userNameError != '') {
+            this.setState({ passwordError, userNameError });
+            return;
+        }
+
+        this.props.actionLogin();
+        try {
+            let data = await handleLogin(username, password);
             await AsyncStorage.setItem("accessToken", data.accessToken);
             this.props.loginSuccess({ accessToken: data.accessToken });
+            this.props.navigation.navigate('Main');
         } catch (err) {
             this.props.loginFailure();
         }
-
-
     }
 
     handleUsername(text, e) {
+
         this.setState({
             username: text,
+            userNameError: validateEmailOrUserName(text)
         });
     }
 
     handlePassword(text, e) {
         this.setState({
             password: text,
+            passwordError: validatePassword(text)
         });
     }
 
+    handleRedirectRegister(event) {
+        this.setState({ init: true });
+        this.props.navigation.navigate("Register");
+    }
+
     render() {
+        const { passwordError, userNameError } = this.state;
 
         return (
-
             <Wallpaper>
-                <Loader
-                    loading={this.props.login.isLoading} />
-                <KeyboardAvoidingView style={styles.containerView} behavior="padding">
+                <Loader loading={this.props.login.isLoading} />
+                <KeyboardAvoidingView
+                    style={styles.containerView}
+                    behavior="padding">
 
                     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                         <View style={styles.loginScreenContainer}>
                             <View style={styles.loginFormView}>
                                 <Text style={styles.logoText}>App Demo</Text>
-                                <TextInput placeholder="Username"
+                                <TextInput placeholder="Nhập username/Email"
                                     placeholderColor="#c4c3cb" style={styles.loginFormTextInput}
                                     onChangeText={this.handleUsername.bind(this)}
                                     value={this.state.username} />
-                                <TextInput placeholder="Password"
+                                {userNameError != '' ? <Text style={styles.messageError}>{userNameError}</Text> : null}
+
+                                <TextInput placeholder="Mật khẩu"
                                     placeholderColor="#c4c3cb"
                                     style={styles.loginFormTextInput}
                                     secureTextEntry={true}
                                     onChangeText={this.handlePassword.bind(this)}
                                     value={this.state.password}
                                 />
+                                {passwordError != '' ? <Text style={styles.messageError}>{passwordError}</Text> : null}
 
                                 <Button
                                     buttonStyle={styles.loginButton}
                                     onPress={this.handleLoginAction.bind(this)}
-                                    title="Đăng nhập"
+                                    title="ĐĂNG NHẬP"
                                 />
+
+                                <Text style={styles.viewSignin} onPress={this.handleRedirectRegister.bind(this)}>
+                                    Đăng ký
+                                </Text>
 
                             </View>
 

@@ -23,6 +23,10 @@ export const restoreToken = payload => ({
   payload,
 });
 
+export const stopLoading = payload => ({
+  type: 'STOP_LOADING',
+  payload,
+});
 export default {
   actionLogin,
   loginSuccess,

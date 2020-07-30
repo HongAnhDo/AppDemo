@@ -1,7 +1,6 @@
 //<ROOT>/shared/APIKit.js
 import axios from 'axios';
-import AsyncStorage from '@react-native-community/async-storage';
-// Create axios client, pre-configured with baseURL
+
 const APIHandle = axios.create({
   baseURL: 'http://172.16.8.112:8888/api/',
   timeout: 10000,
@@ -11,7 +10,6 @@ const APIHandle = axios.create({
 
 // Set JSON Web Token in Client to be included in all calls
 export const setClientToken = token => {
-  console.log("setClientToken", token)
   APIHandle.interceptors.request.use(function (config) {
     config.headers.Authorization = `Bearer ${token}`;
     return config;
@@ -36,9 +34,27 @@ export const handleLogin = async (username, password) => {
     });
 }
 
+export const handleRegister = async (username, email, password) => {
+  return await APIHandle.post('/register', {
+    email: email,
+    password: password,
+    username: username,
+    userRole: "ROLE_USER",
+    type: "UserBody"
+  })
+    .then((response) => {
+      checkSuccess(response);
+
+    })
+    .catch(err => {
+      throw new Error(err);
+    });
+}
+
+
 export const handleMe = async (token) => {
   setClientToken(token);
-  return await APIHandle.get('/me')
+  return await APIHandle.post('/me')
     .then((response) => {
       return response.data.data;
     })
@@ -48,12 +64,11 @@ export const handleMe = async (token) => {
 }
 
 export const handleLoadListArticles = async () => {
-
+  console.log("call post /article/all");
   return await APIHandle.post("/article/all")
     .then((response) => {
-      console.log(response.data.data);
       checkSuccess(response);
-
+      console.log(response.data.data)
       return response.data.data;
     })
     .catch(err => {
@@ -61,14 +76,30 @@ export const handleLoadListArticles = async () => {
     });
 }
 
+export const createNewArticle = async (title, content) => {
+  let data = {
+    title: title,
+    content: content,
+    type: "ArticleRequestBody"
+
+  }
+  return await APIHandle.post("/article/create", data)
+    .then((response) => {
+      checkSuccess(response);
+    })
+    .catch(err => {
+      throw new Error(err);
+    });
+}
+
+
 
 function checkSuccess(response) {
-  if (response == null || response.data.data == null) {
+  if (response == null || response.data == null) {
     throw new Error("Request failed!");
   }
   let code = response.data.code;
   if (code == 1)
-
     throw new Error(response.data.message);
 }
 

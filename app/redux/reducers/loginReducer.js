@@ -1,7 +1,7 @@
 const initData = {
     refreshToken: '',
     accessToken: '',
-    isLoading: false,
+    isLoading: true,
     error: '',
 };
 
@@ -13,7 +13,6 @@ const loginReducer = (state = initData, { type, payload }) => {
                 isLoading: true,
             };
         case 'LOGIN_SUCCESS':
-            console.log(payload.accessToken);
             return {
                 ...state,
                 accessToken: payload.accessToken,
@@ -39,6 +38,13 @@ const loginReducer = (state = initData, { type, payload }) => {
                 isLoading: false,
                 accessToken: ''
             }
+        case 'STOP_LOADING': {
+            return {
+                ...state,
+                isLoading: false
+            }
+        }
+
         default:
             return state;
     }

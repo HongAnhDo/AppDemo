@@ -1,23 +1,38 @@
-import React, {Component} from 'react';
-import {StyleSheet, ImageBackground} from 'react-native';
-
+import React, { Component } from 'react';
+import {
+  StyleSheet,
+  ImageBackground,
+  TouchableOpacity,
+  View
+} from 'react-native';
 import bgSrc from '../../assets/images/wallpaper.png';
+import Theme from '../../Theme'
 
 export default class Wallpaper extends Component {
   render() {
     return (
-      <ImageBackground style={styles.picture} source={bgSrc}>
-        {this.props.children}
-      </ImageBackground>
+      <TouchableOpacity
+        style={styles.container}
+        activeOpacity={1}
+      >
+        <View style={styles.picture} >
+          {this.props.children}
+        </View>
+      </TouchableOpacity>
     );
   }
 }
 
 const styles = StyleSheet.create({
+
   picture: {
     flex: 1,
     width: null,
     height: null,
-    resizeMode: 'cover',
+    backgroundColor: Theme.Colors.appLight
+    // resizeMode: 'cover',
   },
+  container: {
+    flex: 1
+  }
 });

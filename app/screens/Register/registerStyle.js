@@ -1,11 +1,10 @@
-import { Right } from "native-base";
+import Theme from "../../Theme";
 
 const React = require("react-native");
-import Theme from '../../Theme';
 
 const { StyleSheet } = React;
 
-export default {
+export default styles = StyleSheet.create({
 
   containerView: {
     flex: 1,
@@ -16,10 +15,10 @@ export default {
   logoText: {
     fontSize: 40,
     fontWeight: "900",
-    marginTop: 150,
+    marginTop: 100,
     marginBottom: 30,
     textAlign: 'center',
-    color: 'white'
+    color: Theme.Colors.textColor
   },
   loginFormView: {
     flex: 1
@@ -38,17 +37,7 @@ export default {
     marginBottom: 5,
 
   },
-
-  viewSignin: {
-    flex: 1,
-    textAlign: 'right',
-    marginRight: 30,
-    fontSize: 16,
-    color: 'white',
-    textDecorationLine: 'underline'
-
-  },
-  loginButton: {
+  registerButton: {
     backgroundColor: Theme.Colors.appPrimary,
     borderRadius: 5,
     height: 45,
@@ -58,11 +47,19 @@ export default {
     marginRight: 15,
     marginTop: 5,
     marginBottom: 5,
+
+  },
+  titleInput: {
+    marginLeft: 15,
+    color: Theme.Colors.textColor,
+    fontWeight: "bold",
+    fontSize: 16
   },
   messageError: {
     marginLeft: 15,
     color: 'red'
+  },
+  formInput:{
+    marginBottom: 10
   }
-
-
-};
+});
