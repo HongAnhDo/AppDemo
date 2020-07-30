@@ -38,16 +38,21 @@ export default {
     marginBottom: 5,
 
   },
+  
+  viewSignUp: {
+    alignItems: 'flex-end',
+    flex: 1
+  },
 
-  viewSignin: {
-    flex: 1,
+  textSignUp: {
     textAlign: 'right',
     marginRight: 30,
     fontSize: 16,
     color: 'white',
-    textDecorationLine: 'underline'
-
+    textDecorationLine: 'underline',
+    padding: 5
   },
+
   loginButton: {
     backgroundColor: Theme.Colors.appPrimary,
     borderRadius: 5,

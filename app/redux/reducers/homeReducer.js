@@ -6,12 +6,12 @@ const initData = {
 const homeReducer = (state = initData, { type, payload }) => {
     switch (type) {
         case 'REFRESH_ARTICLES':
-            console.log("NNNNNNNNNNNN")
+            console.log("REFRESH_ARTICLES")
             return {
                 refreshArticles: true
             };
         case 'STOP_REFRESH_ARTICLES':
-            console.log("aaaaaaaaaa")
+            console.log("STOP_REFRESH_ARTICLES")
             return {
                 refreshArticles: false
             };

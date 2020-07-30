@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const APIHandle = axios.create({
-  baseURL: 'http://172.16.8.112:8888/api/',
+  baseURL: 'http://192.168.43.106:8888/api/',
   timeout: 10000,
 });
 
@@ -68,7 +68,7 @@ export const handleLoadListArticles = async () => {
   return await APIHandle.post("/article/all")
     .then((response) => {
       checkSuccess(response);
-      console.log(response.data.data)
+
       return response.data.data;
     })
     .catch(err => {

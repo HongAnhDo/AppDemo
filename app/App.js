@@ -3,7 +3,7 @@ import { Provider } from 'react-redux';
 import store from './redux/store';
 import Router from './navigators/AppNavigator'
 import AsyncStorage from '@react-native-community/async-storage';
-import { handleMe } from './requests'
+import { handleMe, setClientToken } from './requests'
 import { StatusBar } from 'react-native';
 import Theme from './Theme'
 export default function App(props) {
@@ -17,6 +17,7 @@ export default function App(props) {
         try {
           console.log("Token is already :" + userToken);
           await handleMe(userToken);
+          // setClientToken(userToken);
           store.dispatch({
             type: 'RESTORE_TOKEN',
             payload: { "accessToken": userToken }

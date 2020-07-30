@@ -73,7 +73,7 @@ class RegisterScreen extends Component {
                 'Lỗi!',
                 err.message,
                 [
-                    { text: 'OK', onPress: () => console.log('Yes button clicked') },
+                    { text: 'OK' },
                 ],
                 {
                     cancelable: true
@@ -179,8 +179,6 @@ class RegisterScreen extends Component {
                                     onPress={this.handleRegisterAction.bind(this)}
                                     title="ĐĂNG KÝ"
                                 />
-
-
 
                             </View>
 

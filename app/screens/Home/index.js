@@ -39,47 +39,29 @@ class HomeScreen extends Component {
         }
     }
 
-    static async getDerivedStateFromProps(nextProps, prevState) {
-        if (nextProps.isRefresh) {
-            var data = [];
-            try {
-                data = await handleLoadListArticles();
-            } catch (e) {
-                console.log("refresh error: " + e)
-            }
+    async componentDidUpdate(prevProps) {
+        console.debug("componentDidUpdate", prevProps.isRefresh);
 
-            nextProps.actionStopRefreshArticles();
-            return {
-                listArticles: data,
-                isLoading: false
-            }
-
+        if (this.props.isRefresh != prevProps.isRefresh) {
+            console.debug("componentDidUpdate", "refresh app");
+            let data = await handleLoadListArticles();
+            this.setState({ listArticles: data })
+            prevProps.actionStopRefreshArticles();
         }
-        return null;
+
     }
 
-
     _handleAddArticle() {
-        this.props.navigation.navigate("Đăng bài");
+        this.props.navigation.navigate("CreateArticle");
     }
 
     renderSeparator = () => {
         return (
             <View
-                style={{
-                    height: 1,
-                    width: "80%",
-                    backgroundColor: "#CED0CE",
-                    marginLeft: "10%"
-                }}
+                style={styles.separator}
             />
         );
     }
-
-
-    static navigationOptions = {
-        title: 'Details',
-    };
 
     render() {
         return (
@@ -87,11 +69,11 @@ class HomeScreen extends Component {
                 <Loader loading={this.state.isLoading} />
                 <FlatList
                     data={this.state.listArticles}
+                    extraData={this.state}
                     renderItem={renderItem}
                     keyExtractor={(item) => item.id}
                     maxToRenderPerBatch={10}
                     style={{ flex: 1 }}
-                    extraData={this.state}
                     ItemSeparatorComponent={this.renderSeparator}
                 />
                 <TouchableOpacity
@@ -115,16 +97,14 @@ const Item = ({ item, onPress, style }) => (
         <View>
             <Text style={styles.title}>{item.title}</Text>
             <Text style={styles.author}>{item.author + "   Created : " + item.createdTime}</Text>
-            <Text>{item.content}</Text>
+            <Text style={styles.textContent}>{item.content}</Text>
         </View>
     </TouchableOpacity>
 );
 
 const renderItem = ({ item }) => {
     return (
-        <Item
-            item={item}
-        />
+        <Item item={item} />
     );
 };
 

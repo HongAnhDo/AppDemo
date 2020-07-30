@@ -83,7 +83,7 @@ class CreateArticleScreen extends Component {
                 content: ''
             });
             this.props.actionRefreshArticles();
-            this.props.navigation.navigate("Trang chủ");
+            this.props.navigation.navigate("Home");
         } catch (err) {
             this.setState({
                 isLoading: false
@@ -101,7 +101,7 @@ class CreateArticleScreen extends Component {
                     <Loader
                         loading={this.state.isLoading} />
                     <View>
-                        <Text>Tiêu đề (*)</Text>
+                        <Text style={styles.title}>Tiêu đề (*)</Text>
                         <TextInput
                             multiline={true}
                             placeholder="Nhập tiêu đề (*)"
@@ -110,7 +110,7 @@ class CreateArticleScreen extends Component {
                             value={this.state.title} />
                     </View>
                     <View>
-                        <Text>Nội dung (*)</Text>
+                        <Text style={styles.title}>Nội dung (*)</Text>
                         <TextInput
                             multiline={true}
                             placeholder="Nhập nội dung "
@@ -119,7 +119,7 @@ class CreateArticleScreen extends Component {
                             value={this.state.content} />
                     </View>
                     <Button
-                        title="Đăng bài"
+                        title="CreateArticle"
                         onPress={this._handlePostArticle.bind(this)} />
                     <Text style={styles.messageError}>{this.state.messageError}</Text>
                 </View>
@@ -138,7 +138,8 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginBottom: 20,
         height: 200,
-        textAlignVertical: 'top'
+        textAlignVertical: 'top',
+        padding: 5
     },
     inputTitle: {
         borderWidth: 1,
@@ -149,6 +150,10 @@ const styles = StyleSheet.create({
         height: 50,
         textAlignVertical: 'top'
 
+    },
+    title: {
+        fontSize: 16,
+        fontWeight: "500"
     },
     container: {
         flex: 1,

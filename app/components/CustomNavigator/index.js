@@ -4,12 +4,13 @@ import {
     DrawerItemList,
     DrawerItem,
 } from '@react-navigation/drawer';
-import { Text, Image, View, StyleSheet } from 'react-native';
+import { Image, View, StyleSheet } from 'react-native';
 import logoImage from '../../assets/images/logo.png';
 import AsyncStorage from '@react-native-community/async-storage';
 import { logout } from '../../redux/actions/loginAction';
 import { connect } from 'react-redux';
 import Theme from '../../Theme';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 class CustomDrawer extends React.Component {
     async _handleLogout() {
@@ -20,8 +21,7 @@ class CustomDrawer extends React.Component {
 
     render() {
         return (
-            <DrawerContentScrollView
-                {...this.props}
+            <DrawerContentScrollView {...this.props}
                 style={{ margin: 0, paddingTop: 0, borderWidth: 0 }}
             >
                 <View style={styles.viewLogo}>
@@ -37,6 +37,13 @@ class CustomDrawer extends React.Component {
                         itemStyle={styles.itemStyle}
                         labelStyle={styles.lableStyle}
                         onPress={this._handleLogout.bind(this)}
+                        icon={({ focused, size }) => (
+                            <Icon
+                                name="sign-out"
+                                size={size}
+                                color={focused ? Theme.Colors.appLight : '#ccc'}
+                            />
+                        )}
                     />
                 </View>
             </DrawerContentScrollView>
@@ -47,9 +54,8 @@ class CustomDrawer extends React.Component {
 
 const styles = StyleSheet.create({
     lableStyle: {
-        fontSize: 18,
-        fontWeight: "normal",
-        // paddingLeft: 15
+        fontSize: 16,
+        fontWeight: "normal"
     },
     itemStyle: {
         justifyContent: "center",

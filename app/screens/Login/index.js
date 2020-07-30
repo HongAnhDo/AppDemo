@@ -7,7 +7,8 @@ import {
     Image,
     TouchableOpacity,
     TouchableWithoutFeedback,
-    KeyboardAvoidingView
+    KeyboardAvoidingView,
+    Alert
 } from 'react-native';
 import {
     actionLogin,
@@ -52,7 +53,6 @@ class LoginScreen extends Component {
     async handleLoginAction(event) {
 
         Keyboard.dismiss();
-
         let { username, password, passwordError, userNameError } = this.state;
 
         passwordError = validatePassword(password);
@@ -71,11 +71,20 @@ class LoginScreen extends Component {
             this.props.navigation.navigate('Main');
         } catch (err) {
             this.props.loginFailure();
+            Alert.alert(
+                'Lỗi!',
+                err.message,
+                [
+                    { text: 'OK' },
+                ],
+                {
+                    cancelable: true
+                }
+            );
         }
     }
 
     handleUsername(text, e) {
-
         this.setState({
             username: text,
             userNameError: validateEmailOrUserName(text)
@@ -129,10 +138,12 @@ class LoginScreen extends Component {
                                     title="ĐĂNG NHẬP"
                                 />
 
-                                <Text style={styles.viewSignin} onPress={this.handleRedirectRegister.bind(this)}>
-                                    Đăng ký
+                                <View style={styles.viewSignUp}>
+                                    <Text style={styles.textSignUp} onPress={this.handleRedirectRegister.bind(this)}>
+                                        ĐĂNG KÝ
                                 </Text>
 
+                                </View>
                             </View>
 
                         </View>

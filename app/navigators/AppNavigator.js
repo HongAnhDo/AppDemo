@@ -9,11 +9,11 @@ import Register from '../screens/Register';
 import Home from '../screens/Home';
 import CreateArticle from '../screens/CreateArticle';
 import { useSelector } from 'react-redux';
-import { Dimensions } from 'react-native';
 import CustomDrawer from '../components/CustomNavigator';
 import HeaderCustom from '../components/Header';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import Theme from '../Theme';
 
-const { width } = Dimensions.get("screen");
 const RootStack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
@@ -33,19 +33,41 @@ function MainStackScreen() {
           overflow: "hidden"
         },
         labelStyle: {
-          fontSize: 18,
+          fontSize: 16,
           fontWeight: "normal"
         }
       }}
-      initialRouteName="Trang chủ">
+      initialRouteName="Home" >
       <Drawer.Screen
-        name="Trang chủ"
-        component={HomeScreenStack} />
+        name="Home"
+        component={HomeScreenStack}
+        options={{
+          title: 'Trang chủ',
+          drawerIcon: ({ focused, size }) => (
+            <Icon
+              name="home"
+              size={size}
+              color={focused ? Theme.Colors.appLight : '#ccc'}
+            />
+          )
+        }}
+      />
 
-      <Drawer.Screen
-        name="Đăng bài"
-        component={ArticleScreenStack} />
-    </Drawer.Navigator>
+      < Drawer.Screen
+        name="CreateArticle"
+        component={ArticleScreenStack}
+        options={{
+          title: 'Đăng bài',
+          drawerIcon: ({ focused, size }) => (
+            <Icon
+              name="pencil"
+              size={size}
+              color={focused ? Theme.Colors.appLight : '#ccc'}
+            />
+          ),
+        }} />
+
+    </Drawer.Navigator >
   )
 }
 
@@ -56,7 +78,7 @@ function HomeScreenStack({ navigation }) {
         name="HomePage"
         component={Home}
         options={{
-          header: () => <HeaderCustom navigation={navigation} title="Trang chủ" />
+          header: () => <HeaderCustom navigation={navigation} title="Đăng bài" />
         }}
       />
     </RootStack.Navigator>

@@ -8,7 +8,7 @@ export default class HeaderCustom extends React.Component {
     }
 
     _goToHome() {
-        this.props.navigation.navigate("Trang chủ");
+        this.props.navigation.navigate("Home");
     }
 
     render() {
