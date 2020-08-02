@@ -11,11 +11,12 @@ import { logout } from '../../redux/actions/loginAction';
 import { connect } from 'react-redux';
 import Theme from '../../Theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { deleteClientToken } from '../../requests';
 
 class CustomDrawer extends React.Component {
     async _handleLogout() {
         await AsyncStorage.removeItem("accessToken");
-
+        deleteClientToken();
         this.props.logout();
     };
 

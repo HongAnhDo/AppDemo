@@ -17,11 +17,12 @@ export default function App(props) {
         try {
           console.log("Token is already :" + userToken);
           await handleMe(userToken);
-          // setClientToken(userToken);
+
           store.dispatch({
             type: 'RESTORE_TOKEN',
             payload: { "accessToken": userToken }
           });
+          
         } catch (err) {
           console.log("Token is invalid", err);
           store.dispatch({

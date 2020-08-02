@@ -2,18 +2,25 @@
 import axios from 'axios';
 
 const APIHandle = axios.create({
-  baseURL: 'http://192.168.43.106:8888/api/',
-  timeout: 10000,
+  baseURL: 'http://192.168.1.15:8888/api/',
+  timeout: 5000,
 });
 
 
 
 // Set JSON Web Token in Client to be included in all calls
 export const setClientToken = token => {
+  deleteClientToken();
   APIHandle.interceptors.request.use(function (config) {
     config.headers.Authorization = `Bearer ${token}`;
+    console.log( config.headers.Authorization);
     return config;
   });
+};
+
+export const deleteClientToken = () => {
+  APIHandle.defaults.headers.common['Authorization'] = null;
+
 };
 
 export const handleLogin = async (username, password) => {
@@ -38,7 +45,7 @@ export const handleRegister = async (username, email, password) => {
   return await APIHandle.post('/register', {
     email: email,
     password: password,
-    username: username,
+    userName: username,
     userRole: "ROLE_USER",
     type: "UserBody"
   })

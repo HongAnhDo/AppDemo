@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {
-    StyleSheet,
     FlatList,
     TouchableOpacity,
     SafeAreaView,
@@ -9,7 +8,7 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import { logout } from '../../redux/actions/loginAction';
-import { handleLoadListArticles } from '../../requests';
+import { handleLoadListArticles, deleteClientToken } from '../../requests';
 import AsyncStorage from '@react-native-community/async-storage';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Loader from '../../components/Loader';
@@ -26,6 +25,7 @@ class HomeScreen extends Component {
     }
     async handleLoginAction(event) {
         await AsyncStorage.removeItem("accessToken");
+        deleteClientToken();
         this.props.logout();
     }
 

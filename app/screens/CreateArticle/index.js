@@ -119,7 +119,7 @@ class CreateArticleScreen extends Component {
                             value={this.state.content} />
                     </View>
                     <Button
-                        title="CreateArticle"
+                        title="Đăng bài"
                         onPress={this._handlePostArticle.bind(this)} />
                     <Text style={styles.messageError}>{this.state.messageError}</Text>
                 </View>
