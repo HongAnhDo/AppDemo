@@ -10,7 +10,7 @@ const validateEmail = email => {
 };
 
 
-const validateEmailOrUserName =(nameLogin) =>{
+const validateEmailOrUserName = (nameLogin) => {
     if (nameLogin == '') {
         return 'Username/Email là bắt buộc';
     }
@@ -29,8 +29,8 @@ const validateUserName = (username) => {
     if (username.length < 3) {
         return 'Username quá ngắn';
     }
-    var re = /^([\\w\\s!\"#$%&'^_`{|}~:;@*+,.()?<>=\\-\\/\\[\\\\\\]]){8,100}$/;
-    if( !re.test(username)){
+    var re = /^(?=[a-zA-Z0-9._]{3,100}$)(?!.*[_.]{2})[^_.].*[^_.]$/;
+    if (!re.test(username)) {
         return "Username không được chứa ký tự đặc biệt, khoảng trắng";
     }
     return '';
