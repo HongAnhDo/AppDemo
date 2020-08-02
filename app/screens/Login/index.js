@@ -108,7 +108,7 @@ class LoginScreen extends Component {
 
         return (
             <Wallpaper>
-                {/* <Loader loading={this.props.login.isLoading} /> */}
+                <Loader loading={this.props.login.isLoading} />
                 <KeyboardAvoidingView
                     style={styles.containerView}
                     behavior="padding">
